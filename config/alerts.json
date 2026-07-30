@@ -14,5 +14,13 @@
     "direction": "below",
     "target": 64872.0,
     "note": "check this test area"
+  },
+  {
+    "id": "Y4RS",
+    "symbol": "LTCUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 45.76,
+    "note": ""
   }
 ]
