@@ -1,18 +1,15 @@
 name: Price Check
 
 on:
-     name: Price Check
-on:
-     schedule:
-       - cron: '*/5 * * * *'    # backup safety net, every 5 minutes
-     workflow_dispatch:          # allows manual trigger from Actions tab
-     repository_dispatch:
-       types: [price-check]      # triggered externally every 1-2 min by cron-job.org
+  schedule:
+    - cron: '*/5 * * * *'    # backup safety net, every 5 minutes
+  workflow_dispatch:          # allows manual trigger from Actions tab
+  repository_dispatch:
+    types: [price-check]      # triggered externally every 1-2 min by cron-job.org
+
 concurrency:
   group: price-check
   cancel-in-progress: false
-permissions:
-  contents: write
 
 permissions:
   contents: write            # needed so the workflow can commit updated state files
@@ -46,4 +43,5 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add state/ config/
           git diff --staged --quiet || git commit -m "Update state [skip ci]"
+          git pull --rebase origin main
           git push
