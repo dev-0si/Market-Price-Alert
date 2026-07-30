@@ -1,13 +1,5 @@
 [
   {
-    "id": "616a55b1",
-    "symbol": "BTC/USDT.P",
-    "market": "crypto",
-    "direction": "below",
-    "target": 64.87,
-    "note": "that\u2019s my area"
-  },
-  {
     "id": "e17fbf1d",
     "symbol": "BTCUSDT.P",
     "market": "crypto",
