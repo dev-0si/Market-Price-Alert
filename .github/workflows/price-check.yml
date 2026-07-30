@@ -1,9 +1,11 @@
 name: Price Check
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'   # runs every 15 minutes
-  workflow_dispatch:          # allows manual trigger from Actions tab
+     schedule:
+       - cron: '*/5 * * * *'    # backup safety net, every 5 minutes
+     workflow_dispatch:          # allows manual trigger from Actions tab
+     repository_dispatch:
+       types: [price-check]      # triggered externally every 1-2 min by cron-job.org
 
 permissions:
   contents: write            # needed so the workflow can commit updated state files
