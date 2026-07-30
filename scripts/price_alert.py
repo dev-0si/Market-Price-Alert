@@ -101,6 +101,32 @@ def telegram_send(text):
         print(f"Failed to send Telegram message: {e}")
 
 
+def telegram_send_with_keyboard(text, keyboard):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("Telegram not configured, skipping send:", text)
+        return
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "reply_markup": keyboard}
+    try:
+        resp = requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Failed to send Telegram message with keyboard: {e}")
+
+
+def telegram_answer_callback(callback_query_id, text=""):
+    if not TELEGRAM_BOT_TOKEN:
+        return
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/answerCallbackQuery"
+    payload = {"callback_query_id": callback_query_id}
+    if text:
+        payload["text"] = text
+    try:
+        requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+    except requests.RequestException as e:
+        print(f"Failed to answer callback query: {e}")
+
+
 def telegram_set_commands():
     """
     Registers /list, /history, /delete in Telegram's native menu button
@@ -112,7 +138,7 @@ def telegram_set_commands():
     commands = [
         {"command": "list", "description": "Show active alerts"},
         {"command": "history", "description": "Show fired/retired alerts"},
-        {"command": "delete", "description": "Delete an alert, e.g. /delete a1b2c3d4"},
+        {"command": "delete", "description": "Tap an alert from a list to delete it"},
     ]
     try:
         requests.post(url, json={"commands": commands}, timeout=REQUEST_TIMEOUT)
@@ -265,6 +291,43 @@ def format_history_list(state):
     return "\n".join(lines)
 
 
+def build_delete_keyboard(alerts):
+    buttons = []
+    for a in alerts:
+        label = f"{a['symbol']} {a['direction']} {a['target']}"
+        buttons.append([{"text": label, "callback_data": f"delete:{a['id']}"}])
+    return {"inline_keyboard": buttons}
+
+
+def send_delete_menu(alerts):
+    if not alerts:
+        telegram_send("No active alerts to delete.")
+        return
+    telegram_send_with_keyboard("Tap an alert to delete it:", build_delete_keyboard(alerts))
+
+
+def handle_delete_callback(callback_query, alerts, state):
+    callback_id = callback_query.get("id")
+    data = callback_query.get("data", "")
+
+    if not data.startswith("delete:"):
+        telegram_answer_callback(callback_id)
+        return alerts, state
+
+    target_id = data.split(":", 1)[1]
+    before_count = len(alerts)
+    alerts = [a for a in alerts if a["id"] != target_id]
+    state.pop(target_id, None)
+
+    if len(alerts) < before_count:
+        telegram_answer_callback(callback_id, "Deleted")
+        telegram_send(f"Deleted alert {target_id}")
+    else:
+        telegram_answer_callback(callback_id, "Already gone")
+
+    return alerts, state
+
+
 def process_telegram_commands(alerts, state, offset_data):
     offset = offset_data.get("offset", 0)
     try:
@@ -275,6 +338,11 @@ def process_telegram_commands(alerts, state, offset_data):
 
     for update in updates:
         offset_data["offset"] = update["update_id"] + 1
+
+        if "callback_query" in update:
+            alerts, state = handle_delete_callback(update["callback_query"], alerts, state)
+            continue
+
         message = update.get("message", {})
         text = message.get("text", "")
         if not text:
@@ -291,19 +359,20 @@ def process_telegram_commands(alerts, state, offset_data):
             telegram_send(format_history_list(state))
             continue
 
-        if lowered.startswith("/delete"):
+        if lowered == "/delete":
+            send_delete_menu(alerts)
+            continue
+
+        if lowered.startswith("/delete "):
             parts = stripped.split(maxsplit=1)
-            if len(parts) == 2:
-                target_id = parts[1].strip()
-                before_count = len(alerts)
-                alerts = [a for a in alerts if a["id"] != target_id]
-                state.pop(target_id, None)
-                if len(alerts) < before_count:
-                    telegram_send(f"Deleted alert {target_id}")
-                else:
-                    telegram_send(f"No active alert found with id {target_id}")
+            target_id = parts[1].strip()
+            before_count = len(alerts)
+            alerts = [a for a in alerts if a["id"] != target_id]
+            state.pop(target_id, None)
+            if len(alerts) < before_count:
+                telegram_send(f"Deleted alert {target_id}")
             else:
-                telegram_send("Usage: /delete <id>  (id shown in /list)")
+                telegram_send(f"No active alert found with id {target_id}")
             continue
 
         new_alert = parse_alert_message(text, {a["id"] for a in alerts})
