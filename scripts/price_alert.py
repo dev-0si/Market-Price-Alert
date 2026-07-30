@@ -24,10 +24,11 @@ into state/alert_state.json under "history".
 
 import json
 import os
+import random
 import re
+import string
 import sys
 import time
-import uuid
 import requests
 
 # ---------------------------------------------------------------------------
@@ -209,7 +210,17 @@ def get_price(symbol):
 # Telegram command parsing -> new alerts
 # ---------------------------------------------------------------------------
 
-def parse_alert_message(text):
+ID_CHARS = string.ascii_uppercase + string.digits
+
+
+def generate_alert_id(existing_ids):
+    while True:
+        candidate = "".join(random.choices(ID_CHARS, k=4))
+        if candidate not in existing_ids:
+            return candidate
+
+
+def parse_alert_message(text, existing_ids):
     match = ALERT_PATTERN.match(text)
     if not match:
         return None
@@ -219,7 +230,7 @@ def parse_alert_message(text):
     note = match.group("note")
     note = note.strip() if note else ""
     return {
-        "id": str(uuid.uuid4())[:8],
+        "id": generate_alert_id(existing_ids),
         "symbol": symbol,
         "market": market_for(symbol),
         "direction": direction,
@@ -295,7 +306,7 @@ def process_telegram_commands(alerts, state, offset_data):
                 telegram_send("Usage: /delete <id>  (id shown in /list)")
             continue
 
-        new_alert = parse_alert_message(text)
+        new_alert = parse_alert_message(text, {a["id"] for a in alerts})
         if new_alert is None:
             continue
 
