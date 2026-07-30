@@ -100,6 +100,25 @@ def telegram_send(text):
         print(f"Failed to send Telegram message: {e}")
 
 
+def telegram_set_commands():
+    """
+    Registers /list, /history, /delete in Telegram's native menu button
+    (the icon next to the message box). Safe to call every run.
+    """
+    if not TELEGRAM_BOT_TOKEN:
+        return
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/setMyCommands"
+    commands = [
+        {"command": "list", "description": "Show active alerts"},
+        {"command": "history", "description": "Show fired/retired alerts"},
+        {"command": "delete", "description": "Delete an alert, e.g. /delete a1b2c3d4"},
+    ]
+    try:
+        requests.post(url, json={"commands": commands}, timeout=REQUEST_TIMEOUT)
+    except requests.RequestException as e:
+        print(f"Failed to set Telegram commands: {e}")
+
+
 # ---------------------------------------------------------------------------
 # Symbol / market helpers
 # ---------------------------------------------------------------------------
@@ -209,19 +228,71 @@ def parse_alert_message(text):
     }
 
 
-def process_telegram_commands(alerts, offset_data):
+def format_active_list(alerts):
+    if not alerts:
+        return "No active alerts."
+    lines = []
+    for a in alerts:
+        line = f"{a['id']}: {a['symbol']} {a['direction']} {a['target']}"
+        if a.get("note"):
+            line += f" [{a['note']}]"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def format_history_list(state):
+    history = state.get("history", [])
+    if not history:
+        return "No alert history yet."
+    lines = []
+    for a in history:
+        line = f"{a['symbol']} {a['direction']} {a['target']}"
+        if a.get("note"):
+            line += f" [{a['note']}]"
+        line += f" \u2014 fired {a.get('fire_count', 0)}x"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def process_telegram_commands(alerts, state, offset_data):
     offset = offset_data.get("offset", 0)
     try:
         updates = telegram_get_updates(offset)
     except Exception as e:
         print(f"Failed to poll Telegram: {e}")
-        return alerts, offset_data
+        return alerts, state, offset_data
 
     for update in updates:
         offset_data["offset"] = update["update_id"] + 1
         message = update.get("message", {})
         text = message.get("text", "")
         if not text:
+            continue
+
+        stripped = text.strip()
+        lowered = stripped.lower()
+
+        if lowered == "/list":
+            telegram_send(format_active_list(alerts))
+            continue
+
+        if lowered == "/history":
+            telegram_send(format_history_list(state))
+            continue
+
+        if lowered.startswith("/delete"):
+            parts = stripped.split(maxsplit=1)
+            if len(parts) == 2:
+                target_id = parts[1].strip()
+                before_count = len(alerts)
+                alerts = [a for a in alerts if a["id"] != target_id]
+                state.pop(target_id, None)
+                if len(alerts) < before_count:
+                    telegram_send(f"Deleted alert {target_id}")
+                else:
+                    telegram_send(f"No active alert found with id {target_id}")
+            else:
+                telegram_send("Usage: /delete <id>  (id shown in /list)")
             continue
 
         new_alert = parse_alert_message(text)
@@ -234,7 +305,7 @@ def process_telegram_commands(alerts, offset_data):
             confirm += f" [{new_alert['note']}]"
         telegram_send(confirm)
 
-    return alerts, offset_data
+    return alerts, state, offset_data
 
 
 # ---------------------------------------------------------------------------
@@ -296,11 +367,13 @@ def evaluate_alerts(alerts, state):
 # ---------------------------------------------------------------------------
 
 def main():
+    telegram_set_commands()
+
     alerts = load_json(CONFIG_PATH, [])
     state = load_json(STATE_PATH, {})
     offset_data = load_json(OFFSET_PATH, {"offset": 0})
 
-    alerts, offset_data = process_telegram_commands(alerts, offset_data)
+    alerts, state, offset_data = process_telegram_commands(alerts, state, offset_data)
     alerts, state = evaluate_alerts(alerts, state)
 
     save_json(CONFIG_PATH, alerts)
