@@ -6,5 +6,13 @@
     "direction": "below",
     "target": 64.87,
     "note": "that\u2019s my area"
+  },
+  {
+    "id": "e17fbf1d",
+    "symbol": "BTCUSDT.P",
+    "market": "crypto",
+    "direction": "below",
+    "target": 64872.0,
+    "note": "check this test area"
   }
 ]
