@@ -1,6 +1,1 @@
-.github/workflows/price-check.yml
-scripts/price_alert.py
-config/alerts.json
-state/telegram_offset.json
-state/alert_state.json
-requirements.txt
+
