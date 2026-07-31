@@ -1,13 +1,5 @@
 [
   {
-    "id": "X3CJ",
-    "symbol": "STBLUSDT.P",
-    "market": "crypto",
-    "direction": "above",
-    "target": 0.02255,
-    "note": ""
-  },
-  {
     "id": "YVMZ",
     "symbol": "XAUUSD",
     "market": "fx",
