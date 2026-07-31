@@ -22,5 +22,13 @@
     "direction": "above",
     "target": 347.57,
     "note": "D TF"
+  },
+  {
+    "id": "TFX3",
+    "symbol": "ASTEROIDUSDT.P",
+    "market": "crypto",
+    "direction": "below",
+    "target": 5.66e-05,
+    "note": "H1 TF entry"
   }
 ]
