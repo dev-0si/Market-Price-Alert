@@ -30,5 +30,13 @@
     "direction": "below",
     "target": 5.66e-05,
     "note": "H1 TF entry"
+  },
+  {
+    "id": "G6Z4",
+    "symbol": "GOOGLUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 338.6,
+    "note": "15m"
   }
 ]
