@@ -22,5 +22,13 @@
     "direction": "above",
     "target": 0.02255,
     "note": ""
+  },
+  {
+    "id": "YVMZ",
+    "symbol": "XAUUSD",
+    "market": "fx",
+    "direction": "below",
+    "target": 4065.29,
+    "note": ""
   }
 ]
