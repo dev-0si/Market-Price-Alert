@@ -1,13 +1,5 @@
 [
   {
-    "id": "e17fbf1d",
-    "symbol": "BTCUSDT.P",
-    "market": "crypto",
-    "direction": "below",
-    "target": 64872.0,
-    "note": "check this test area"
-  },
-  {
     "id": "Y4RS",
     "symbol": "LTCUSDT.P",
     "market": "crypto",
