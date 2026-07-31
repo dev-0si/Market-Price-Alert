@@ -8,14 +8,6 @@
     "note": ""
   },
   {
-    "id": "MXFE",
-    "symbol": "EURGBP",
-    "market": "fx",
-    "direction": "above",
-    "target": 0.8562,
-    "note": ""
-  },
-  {
     "id": "N48C",
     "symbol": "GOOGLUSDT.P",
     "market": "crypto",

@@ -3,20 +3,28 @@
     "last_side": "below",
     "fire_count": 2
   },
-  "MXFE": {
-    "last_side": "below",
-    "fire_count": 4
-  },
   "sent_message_ids": [
     126,
     127,
     128,
     129,
     130,
-    131
+    131,
+    132
   ],
   "N48C": {
     "last_side": "below",
     "fire_count": 0
-  }
+  },
+  "history": [
+    {
+      "id": "MXFE",
+      "symbol": "EURGBP",
+      "market": "fx",
+      "direction": "above",
+      "target": 0.8562,
+      "note": "",
+      "fire_count": 5
+    }
+  ]
 }
