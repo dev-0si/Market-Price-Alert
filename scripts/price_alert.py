@@ -88,7 +88,13 @@ def telegram_get_updates(offset):
     return resp.json().get("result", [])
 
 
-def telegram_send(text):
+def _track_message_id(state, message_id):
+    if state is None or message_id is None:
+        return
+    state.setdefault("sent_message_ids", []).append(message_id)
+
+
+def telegram_send(text, state=None):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram not configured, skipping send:", text)
         return
@@ -97,11 +103,13 @@ def telegram_send(text):
     try:
         resp = requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
+        message_id = resp.json().get("result", {}).get("message_id")
+        _track_message_id(state, message_id)
     except requests.RequestException as e:
         print(f"Failed to send Telegram message: {e}")
 
 
-def telegram_send_with_keyboard(text, keyboard):
+def telegram_send_with_keyboard(text, keyboard, state=None):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram not configured, skipping send:", text)
         return
@@ -110,8 +118,21 @@ def telegram_send_with_keyboard(text, keyboard):
     try:
         resp = requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
+        message_id = resp.json().get("result", {}).get("message_id")
+        _track_message_id(state, message_id)
     except requests.RequestException as e:
         print(f"Failed to send Telegram message with keyboard: {e}")
+
+
+def telegram_delete_message(message_id):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/deleteMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "message_id": message_id}
+    try:
+        requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+    except requests.RequestException as e:
+        print(f"Failed to delete message {message_id}: {e}")
 
 
 def telegram_answer_callback(callback_query_id, text=""):
@@ -139,6 +160,7 @@ def telegram_set_commands():
         {"command": "list", "description": "Show active alerts"},
         {"command": "history", "description": "Show fired/retired alerts"},
         {"command": "delete", "description": "Tap an alert from a list to delete it"},
+        {"command": "clear", "description": "Clear the chat (deletes messages < 48h old)"},
     ]
     try:
         requests.post(url, json={"commands": commands}, timeout=REQUEST_TIMEOUT)
@@ -299,11 +321,11 @@ def build_delete_keyboard(alerts):
     return {"inline_keyboard": buttons}
 
 
-def send_delete_menu(alerts):
+def send_delete_menu(alerts, state):
     if not alerts:
-        telegram_send("No active alerts to delete.")
+        telegram_send("No active alerts to delete.", state)
         return
-    telegram_send_with_keyboard("Tap an alert to delete it:", build_delete_keyboard(alerts))
+    telegram_send_with_keyboard("Tap an alert to delete it:", build_delete_keyboard(alerts), state)
 
 
 def handle_delete_callback(callback_query, alerts, state):
@@ -321,11 +343,25 @@ def handle_delete_callback(callback_query, alerts, state):
 
     if len(alerts) < before_count:
         telegram_answer_callback(callback_id, "Deleted")
-        telegram_send(f"Deleted alert {target_id}")
+        telegram_send(f"Deleted alert {target_id}", state)
     else:
         telegram_answer_callback(callback_id, "Already gone")
 
     return alerts, state
+
+
+def clear_chat(state):
+    """
+    Deletes every message this script knows about in the chat -- both its
+    own replies and the messages you sent it (Telegram allows a bot to
+    delete incoming messages in a private chat). Telegram's own hard limit
+    applies: only messages from the last 48 hours can be deleted via the
+    API; anything older is left in place.
+    """
+    message_ids = state.get("sent_message_ids", [])
+    for message_id in message_ids:
+        telegram_delete_message(message_id)
+    state["sent_message_ids"] = []
 
 
 def process_telegram_commands(alerts, state, offset_data):
@@ -348,19 +384,26 @@ def process_telegram_commands(alerts, state, offset_data):
         if not text:
             continue
 
+        # Track every incoming message so /clear can remove it too.
+        _track_message_id(state, message.get("message_id"))
+
         stripped = text.strip()
         lowered = stripped.lower()
 
+        if lowered == "/clear":
+            clear_chat(state)
+            continue
+
         if lowered == "/list":
-            telegram_send(format_active_list(alerts))
+            telegram_send(format_active_list(alerts), state)
             continue
 
         if lowered == "/history":
-            telegram_send(format_history_list(state))
+            telegram_send(format_history_list(state), state)
             continue
 
         if lowered == "/delete":
-            send_delete_menu(alerts)
+            send_delete_menu(alerts, state)
             continue
 
         if lowered.startswith("/delete "):
@@ -370,9 +413,9 @@ def process_telegram_commands(alerts, state, offset_data):
             alerts = [a for a in alerts if a["id"] != target_id]
             state.pop(target_id, None)
             if len(alerts) < before_count:
-                telegram_send(f"Deleted alert {target_id}")
+                telegram_send(f"Deleted alert {target_id}", state)
             else:
-                telegram_send(f"No active alert found with id {target_id}")
+                telegram_send(f"No active alert found with id {target_id}", state)
             continue
 
         new_alert = parse_alert_message(text, {a["id"] for a in alerts})
@@ -383,7 +426,7 @@ def process_telegram_commands(alerts, state, offset_data):
         confirm = f"Alert added: {new_alert['symbol']} {new_alert['direction']} {new_alert['target']}"
         if new_alert["note"]:
             confirm += f" [{new_alert['note']}]"
-        telegram_send(confirm)
+        telegram_send(confirm, state)
 
     return alerts, state, offset_data
 
@@ -393,7 +436,8 @@ def process_telegram_commands(alerts, state, offset_data):
 # ---------------------------------------------------------------------------
 
 def format_alert_message(alert):
-    text = f"{alert['symbol']} {alert['direction']} {alert['target']}"
+    direction_icon = "\U0001F4C8" if alert["direction"] == "above" else "\U0001F4C9"  # 📈 / 📉
+    text = f"\U0001F3AF {direction_icon} {alert['symbol']} {alert['direction']} {alert['target']}"
     if alert.get("note"):
         text += f" [{alert['note']}]"
     return text
@@ -421,7 +465,7 @@ def evaluate_alerts(alerts, state):
         # re-crosses, which may never happen).
         if record["last_side"] is None:
             if current_side == alert["direction"]:
-                telegram_send(format_alert_message(alert))
+                telegram_send(format_alert_message(alert), state)
                 record["fire_count"] += 1
             record["last_side"] = current_side
             state[alert_id] = record
@@ -439,7 +483,7 @@ def evaluate_alerts(alerts, state):
         )
 
         if crossed_into_trigger_side:
-            telegram_send(format_alert_message(alert))
+            telegram_send(format_alert_message(alert), state)
             record["fire_count"] += 1
 
         record["last_side"] = current_side
