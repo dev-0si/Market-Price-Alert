@@ -1,10 +1,14 @@
 {
   "YVMZ": {
-    "last_side": "above",
-    "fire_count": 1
-  },
-  "MXFE": {
     "last_side": "below",
     "fire_count": 2
-  }
+  },
+  "MXFE": {
+    "last_side": "above",
+    "fire_count": 3
+  },
+  "sent_message_ids": [
+    102,
+    103
+  ]
 }
