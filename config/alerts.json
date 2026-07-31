@@ -30,5 +30,13 @@
     "direction": "below",
     "target": 4065.29,
     "note": ""
+  },
+  {
+    "id": "MXFE",
+    "symbol": "EURGBP",
+    "market": "fx",
+    "direction": "above",
+    "target": 0.8562,
+    "note": ""
   }
 ]

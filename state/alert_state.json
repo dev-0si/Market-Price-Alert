@@ -2,5 +2,9 @@
   "YVMZ": {
     "last_side": "above",
     "fire_count": 0
+  },
+  "MXFE": {
+    "last_side": "below",
+    "fire_count": 0
   }
 }
