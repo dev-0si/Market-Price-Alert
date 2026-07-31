@@ -22,5 +22,13 @@
     "direction": "above",
     "target": 0.8562,
     "note": ""
+  },
+  {
+    "id": "N48C",
+    "symbol": "GOOGLUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 347.57,
+    "note": "D TF"
   }
 ]
