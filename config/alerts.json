@@ -1,13 +1,5 @@
 [
   {
-    "id": "GOIS",
-    "symbol": "SPXUSDT.P",
-    "market": "crypto",
-    "direction": "above",
-    "target": 0.01577,
-    "note": ""
-  },
-  {
     "id": "68AU",
     "symbol": "SPKUSDT.P",
     "market": "crypto",
