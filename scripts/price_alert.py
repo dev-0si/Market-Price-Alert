@@ -414,11 +414,24 @@ def evaluate_alerts(alerts, state):
         current_side = "above" if price >= alert["target"] else "below"
         record = state.get(alert_id, {"last_side": None, "fire_count": 0})
 
-        # First time we've ever seen this alert: baseline it, don't fire.
+        # First time we've ever seen this alert: if the condition is already
+        # true right now, fire immediately instead of silently waiting for a
+        # future crossing (otherwise an alert created when the price already
+        # sits past its target would never fire until it dips back and
+        # re-crosses, which may never happen).
         if record["last_side"] is None:
+            if current_side == alert["direction"]:
+                telegram_send(format_alert_message(alert))
+                record["fire_count"] += 1
             record["last_side"] = current_side
             state[alert_id] = record
-            still_active.append(alert)
+
+            if record["fire_count"] >= MAX_FIRES:
+                history = state.setdefault("history", [])
+                history.append({**alert, "fire_count": record["fire_count"]})
+                state.pop(alert_id, None)
+            else:
+                still_active.append(alert)
             continue
 
         crossed_into_trigger_side = (
