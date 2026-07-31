@@ -4,13 +4,14 @@
     "fire_count": 2
   },
   "MXFE": {
-    "last_side": "below",
-    "fire_count": 3
+    "last_side": "above",
+    "fire_count": 4
   },
   "sent_message_ids": [
     106,
     107,
     108,
-    109
+    109,
+    110
   ]
 }
