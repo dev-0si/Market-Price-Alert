@@ -1,13 +1,5 @@
 [
   {
-    "id": "TUL0",
-    "symbol": "FIGHTUSDT.P",
-    "market": "crypto",
-    "direction": "above",
-    "target": 0.003158,
-    "note": "Daily btekout"
-  },
-  {
     "id": "X3CJ",
     "symbol": "STBLUSDT.P",
     "market": "crypto",
