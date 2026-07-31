@@ -242,10 +242,10 @@ def get_price_finnhub(symbol):
 
 def get_fx_price(symbol):
     try:
-        return get_price_twelve_data(symbol)
-    except Exception as e:
-        print(f"Twelve Data failed for {symbol} ({e}), trying Finnhub...")
         return get_price_finnhub(symbol)
+    except Exception as e:
+        print(f"Finnhub failed for {symbol} ({e}), trying Twelve Data...")
+        return get_price_twelve_data(symbol)
 
 
 def get_price(symbol):
