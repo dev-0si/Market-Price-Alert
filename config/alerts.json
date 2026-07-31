@@ -1,13 +1,5 @@
 [
   {
-    "id": "Y4RS",
-    "symbol": "LTCUSDT.P",
-    "market": "crypto",
-    "direction": "above",
-    "target": 45.76,
-    "note": ""
-  },
-  {
     "id": "GOIS",
     "symbol": "SPXUSDT.P",
     "market": "crypto",
