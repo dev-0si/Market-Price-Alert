@@ -38,5 +38,13 @@
     "direction": "below",
     "target": 337.37,
     "note": "15m"
+  },
+  {
+    "id": "3W4B",
+    "symbol": "LTCUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 44.89,
+    "note": "5m"
   }
 ]
