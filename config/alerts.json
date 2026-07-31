@@ -1,13 +1,5 @@
 [
   {
-    "id": "68AU",
-    "symbol": "SPKUSDT.P",
-    "market": "crypto",
-    "direction": "below",
-    "target": 0.01544,
-    "note": ""
-  },
-  {
     "id": "TUL0",
     "symbol": "FIGHTUSDT.P",
     "market": "crypto",
