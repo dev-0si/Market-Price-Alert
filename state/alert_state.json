@@ -12,7 +12,8 @@
     131,
     132,
     133,
-    134
+    134,
+    135
   ],
   "N48C": {
     "last_side": "below",
@@ -28,5 +29,13 @@
       "note": "",
       "fire_count": 5
     }
-  ]
+  ],
+  "G6Z4": {
+    "last_side": "above",
+    "fire_count": 1
+  },
+  "36TF": {
+    "last_side": "above",
+    "fire_count": 0
+  }
 }
