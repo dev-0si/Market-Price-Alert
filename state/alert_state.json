@@ -3,21 +3,7 @@
     "last_side": "below",
     "fire_count": 2
   },
-  "sent_message_ids": [
-    126,
-    127,
-    128,
-    129,
-    130,
-    131,
-    132,
-    133,
-    134,
-    135,
-    136,
-    137,
-    138
-  ],
+  "sent_message_ids": [],
   "N48C": {
     "last_side": "above",
     "fire_count": 1
