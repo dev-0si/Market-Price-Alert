@@ -46,5 +46,13 @@
     "direction": "above",
     "target": 44.89,
     "note": "5m"
+  },
+  {
+    "id": "3E9R",
+    "symbol": "ETHUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 1847.0,
+    "note": "H2"
   }
 ]
