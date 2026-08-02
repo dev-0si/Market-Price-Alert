@@ -14,7 +14,8 @@
     150,
     151,
     152,
-    153
+    153,
+    154
   ],
   "N48C": {
     "last_side": "above",
@@ -44,7 +45,7 @@
     "fire_count": 0
   },
   "3E9R": {
-    "last_side": "below",
-    "fire_count": 0
+    "last_side": "above",
+    "fire_count": 1
   }
 }
