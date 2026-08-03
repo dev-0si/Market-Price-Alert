@@ -1,7 +1,7 @@
 {
   "YVMZ": {
-    "last_side": "above",
-    "fire_count": 3
+    "last_side": "below",
+    "fire_count": 4
   },
   "sent_message_ids": [
     143,
@@ -17,7 +17,8 @@
     153,
     154,
     155,
-    156
+    156,
+    157
   ],
   "N48C": {
     "last_side": "above",
