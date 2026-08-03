@@ -1,13 +1,5 @@
 [
   {
-    "id": "YVMZ",
-    "symbol": "XAUUSD",
-    "market": "fx",
-    "direction": "below",
-    "target": 4065.29,
-    "note": ""
-  },
-  {
     "id": "N48C",
     "symbol": "GOOGLUSDT.P",
     "market": "crypto",

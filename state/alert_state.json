@@ -1,8 +1,4 @@
 {
-  "YVMZ": {
-    "last_side": "above",
-    "fire_count": 4
-  },
   "sent_message_ids": [
     143,
     144,
@@ -18,7 +14,8 @@
     154,
     155,
     156,
-    157
+    157,
+    158
   ],
   "N48C": {
     "last_side": "above",
@@ -31,6 +28,15 @@
       "market": "fx",
       "direction": "above",
       "target": 0.8562,
+      "note": "",
+      "fire_count": 5
+    },
+    {
+      "id": "YVMZ",
+      "symbol": "XAUUSD",
+      "market": "fx",
+      "direction": "below",
+      "target": 4065.29,
       "note": "",
       "fire_count": 5
     }
