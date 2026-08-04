@@ -16,7 +16,8 @@
     156,
     157,
     158,
-    159
+    159,
+    160
   ],
   "N48C": {
     "last_side": "above",
@@ -51,8 +52,8 @@
     "fire_count": 0
   },
   "3W4B": {
-    "last_side": "below",
-    "fire_count": 1
+    "last_side": "above",
+    "fire_count": 2
   },
   "3E9R": {
     "last_side": "above",
