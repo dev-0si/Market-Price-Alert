@@ -20,11 +20,12 @@
     160,
     161,
     162,
-    163
+    163,
+    164
   ],
   "N48C": {
-    "last_side": "below",
-    "fire_count": 3
+    "last_side": "above",
+    "fire_count": 4
   },
   "history": [
     {
