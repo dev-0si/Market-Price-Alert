@@ -24,7 +24,8 @@
     164,
     165,
     166,
-    167
+    167,
+    168
   ],
   "N48C": {
     "last_side": "below",
@@ -48,6 +49,15 @@
       "target": 4065.29,
       "note": "",
       "fire_count": 5
+    },
+    {
+      "id": "3W4B",
+      "symbol": "LTCUSDT.P",
+      "market": "crypto",
+      "direction": "above",
+      "target": 44.89,
+      "note": "5m",
+      "fire_count": 5
     }
   ],
   "G6Z4": {
@@ -57,10 +67,6 @@
   "36TF": {
     "last_side": "above",
     "fire_count": 0
-  },
-  "3W4B": {
-    "last_side": "below",
-    "fire_count": 4
   },
   "3E9R": {
     "last_side": "above",
