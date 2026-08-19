@@ -23,7 +23,8 @@
     163,
     164,
     165,
-    166
+    166,
+    167
   ],
   "N48C": {
     "last_side": "below",
@@ -58,8 +59,8 @@
     "fire_count": 0
   },
   "3W4B": {
-    "last_side": "below",
-    "fire_count": 3
+    "last_side": "above",
+    "fire_count": 4
   },
   "3E9R": {
     "last_side": "above",
