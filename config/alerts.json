@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "E71A",
+    "symbol": "ETHUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 2518.0,
+    "note": ""
+  }
+]
