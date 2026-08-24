@@ -73,5 +73,9 @@
       "note": "5m",
       "fire_count": 5
     }
-  ]
+  ],
+  "E71A": {
+    "last_side": "below",
+    "fire_count": 0
+  }
 }
