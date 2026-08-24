@@ -31,12 +31,13 @@
     170,
     173,
     171,
-    174
+    174,
+    175,
+    176,
+    177,
+    178,
+    179
   ],
-  "N48C": {
-    "last_side": "below",
-    "fire_count": 4
-  },
   "history": [
     {
       "id": "MXFE",
@@ -65,17 +66,5 @@
       "note": "5m",
       "fire_count": 5
     }
-  ],
-  "G6Z4": {
-    "last_side": "above",
-    "fire_count": 1
-  },
-  "36TF": {
-    "last_side": "above",
-    "fire_count": 0
-  },
-  "3E9R": {
-    "last_side": "above",
-    "fire_count": 2
-  }
+  ]
 }
