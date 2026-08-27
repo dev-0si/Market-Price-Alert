@@ -43,7 +43,8 @@
     183,
     185,
     184,
-    186
+    186,
+    187
   ],
   "history": [
     {
@@ -75,7 +76,7 @@
     }
   ],
   "E71A": {
-    "last_side": "below",
-    "fire_count": 0
+    "last_side": "above",
+    "fire_count": 1
   }
 }
