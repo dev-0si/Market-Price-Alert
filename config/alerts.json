@@ -14,5 +14,13 @@
     "direction": "above",
     "target": 686.85,
     "note": ""
+  },
+  {
+    "id": "6T23",
+    "symbol": "BNBUSDT.P",
+    "market": "crypto",
+    "direction": "below",
+    "target": 685.91,
+    "note": ""
   }
 ]
