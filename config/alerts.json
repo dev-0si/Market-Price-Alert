@@ -6,5 +6,13 @@
     "direction": "above",
     "target": 2518.0,
     "note": ""
+  },
+  {
+    "id": "85XF",
+    "symbol": "BNBUSDT.P",
+    "market": "crypto",
+    "direction": "above",
+    "target": 686.85,
+    "note": ""
   }
 ]
