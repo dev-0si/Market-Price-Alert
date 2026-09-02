@@ -52,7 +52,8 @@
     192,
     193,
     194,
-    195
+    195,
+    196
   ],
   "history": [
     {
@@ -88,11 +89,11 @@
     "fire_count": 1
   },
   "85XF": {
-    "last_side": "below",
-    "fire_count": 0
+    "last_side": "above",
+    "fire_count": 1
   },
   "6T23": {
-    "last_side": "below",
+    "last_side": "above",
     "fire_count": 1
   }
 }
