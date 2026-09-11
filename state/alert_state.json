@@ -57,7 +57,8 @@
     197,
     198,
     199,
-    200
+    200,
+    201
   ],
   "history": [
     {
@@ -89,8 +90,8 @@
     }
   ],
   "E71A": {
-    "last_side": "below",
-    "fire_count": 3
+    "last_side": "above",
+    "fire_count": 4
   },
   "85XF": {
     "last_side": "above",
