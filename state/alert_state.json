@@ -58,7 +58,8 @@
     198,
     199,
     200,
-    201
+    201,
+    202
   ],
   "history": [
     {
@@ -87,12 +88,17 @@
       "target": 44.89,
       "note": "5m",
       "fire_count": 5
+    },
+    {
+      "id": "E71A",
+      "symbol": "ETHUSDT.P",
+      "market": "crypto",
+      "direction": "above",
+      "target": 2518.0,
+      "note": "",
+      "fire_count": 5
     }
   ],
-  "E71A": {
-    "last_side": "below",
-    "fire_count": 4
-  },
   "85XF": {
     "last_side": "above",
     "fire_count": 2
